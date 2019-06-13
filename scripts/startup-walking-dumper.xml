@@ -1,0 +1,68 @@
+<!-- Copyright (C) 2019 Fondazione Istituto Italiano di Tecnologia (IIT) -->
+<!-- All Rights Reserved. -->
+
+<application>
+
+    <name>Walking data dumper Coordinator</name>
+    <description>runs dependencies for Walking data dumper module</description>
+    <authors>
+        <author email="prashanth.ramadoss@iit.it">Prashanth Ramadoss</author>
+        <author email="silvio.traversaro@iit.it">Silvio Traversaro</author>
+    </authors>
+    
+    <module>
+        <name>yarpdev</name>
+        <parameters>--from camera/ServerGrabberDualDragon.ini --split true</parameters>
+        <node>icub-head</node>
+    </module>
+    
+    <module>
+		<name>camCalibWithPose</name>
+		<parameters>--context cameraCalibration --from icubEyes.ini --group CAMERA_CALIBRATION_LEFT --name /icub/camcalib/left --useIMU</parameters>  
+		<node>icub30</node>
+	</module>
+
+	<module>
+		<name>camCalibWithPose</name>
+		<parameters>--context cameraCalibration --from icubEyes.ini --group CAMERA_CALIBRATION_RIGHT --name /icub/camcalib/right --useIMU</parameters> 
+		<node>icub30</node>
+	</module>
+	
+	<module>
+        <name>WalkingModule</name>
+        <node>icub-head</node>
+    </module>
+    
+    <connection>
+		<from>/icub/cam/left</from>
+		<to>/icub/camcalib/left/in</to>
+		<protocol>mjpeg</protocol>
+	</connection>
+	<connection>
+		<from>/icub/cam/right</from>
+		<to>/icub/camcalib/right/in</to>
+		<protocol>mjpeg</protocol>
+	</connection>
+	<connection>
+		<from>/icub/head/state:o</from>
+		<to>/icub/camcalib/left/head_encs/in</to>
+		<protocol>udp</protocol>
+	</connection>
+	<connection>
+		<from>/icub/head/state:o</from>
+		<to>/icub/camcalib/right/head_encs/in</to>
+		<protocol>udp</protocol>
+	</connection>
+	<connection>
+		<from>/icub/inertial</from>
+		<to>/icub/camcalib/left/imu/in</to>
+		<protocol>udp</protocol>
+	</connection>
+	<connection>
+		<from>/icub/inertial</from>
+		<to>/icub/camcalib/right/imu/in</to>
+		<protocol>udp</protocol>
+	</connection>
+
+</application>
+
