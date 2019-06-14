@@ -41,10 +41,10 @@
     <!-- VIO -->
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/head/inertial --type bottle</parameter>
+        <parameters>--name /dumper/icub/head/inertial --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-head-inertial</tag>
-    <module>
+    </module>
     <connection>
         <from>/icub/inertial</from>
         <to>/dumper/icub/head/inertial</to>
@@ -53,10 +53,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/head/camcalib/left --type image</parameter>
+        <parameters>--name /dumper/icub/head/camcalib/left --type image</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-head-camcalib-left</tag>
-    <module>
+    </module>
     <connection>
         <from>/icub/camcalib/left/out</from>
         <to>/dumper/icub/head/camcalib/left</to>
@@ -65,10 +65,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/head/camcalib/right --type image</parameter>
+        <parameters>--name /dumper/icub/head/camcalib/right --type image</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-head-camcalib-right</tag>
-    <module>
+    </module>
     <connection>
         <from>/icub/camcalib/right/out</from>
         <to>/dumper/icub/head/camcalib/right</to>
@@ -77,10 +77,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/head/state:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/head/state:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-head-state:o</tag>
-    <module>
+    </module>
     <connection>
         <from>/icub/head/state:o</from>
         <to>/dumper/icub/head/state:o</to>
@@ -90,10 +90,10 @@
     <!-- BASE IMU -->    
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/waist/inertial --type bottle</parameter>
+        <parameters>--name /dumper/icub/waist/inertial --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-waist-inertial</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/icub/xsens_inertial</from>
         <to>/dumper/icub/waist/inertial</to>
@@ -103,10 +103,10 @@
     <!-- CONTACT WRENCHES -->
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/left_foot/cartesianEndEffectorWrench:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/left_foot/cartesianEndEffectorWrench:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_foot-cartesianEndEffectorWrench:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/wholeBodyDynamics/left_foot/cartesianEndEffectorWrench:o</from>
         <to>/dumper/icub/left_foot/cartesianEndEffectorWrench:o</to>
@@ -115,10 +115,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/right_foot/cartesianEndEffectorWrench:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/right_foot/cartesianEndEffectorWrench:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_foot-cartesianEndEffectorWrench:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/wholeBodyDynamics/right_foot/cartesianEndEffectorWrench:o</from>
         <to>/dumper/icub/right_foot/cartesianEndEffectorWrench:o</to>
@@ -127,10 +127,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/left_arm/cartesianEndEffectorWrench:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/left_arm/cartesianEndEffectorWrench:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_arm-cartesianEndEffectorWrench:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/wholeBodyDynamics/left_arm/cartesianEndEffectorWrench:o</from>
         <to>/dumper/icub/left_arm/cartesianEndEffectorWrench:o</to>
@@ -139,10 +139,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/right_arm/cartesianEndEffectorWrench:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/right_arm/cartesianEndEffectorWrench:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_arm-cartesianEndEffectorWrench:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/wholeBodyDynamics/right_arm/cartesianEndEffectorWrench:o</from>
         <to>/dumper/icub/right_arm/cartesianEndEffectorWrench:o</to>
@@ -152,10 +152,10 @@
     <!-- JOINT STATES -->
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/all_joints/stateExt:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/all_joints/stateExt:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-all_joints-stateExt:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/icub04/all_joints/stateExt:o</from>
         <to>/dumper/icub/all_joints/stateExt:o</to>
@@ -165,10 +165,10 @@
     <!-- 6 AXIS FT SENSORS -->
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/left_arm/analog:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/left_arm/analog:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_arm-analog:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/icub/left_arm/analog:o</from>
         <to>/dumper/icub/left_arm/analog:o</to>
@@ -177,10 +177,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/right_arm/analog:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/right_arm/analog:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_arm-analog:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/icub/right_arm/analog:o</from>
         <to>/dumper/icub/right_arm/analog:o</to>
@@ -189,10 +189,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/left_leg/measures:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/left_leg/measures:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_leg-measures:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/icub/left_leg/measures:o</from>
         <to>/dumper/icub/left_leg/measures:o</to>
@@ -201,10 +201,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/right_leg/measures:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/right_leg/measures:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_leg-measures:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/icub/right_leg/measures:o</from>
         <to>/dumper/icub/right_leg/measures:o</to>
@@ -213,10 +213,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/left_foot/measures:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/left_foot/measures:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_foot-measures:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/icub/left_foot/measures:o</from>
         <to>/dumper/icub/left_foot/measures:o</to>
@@ -225,10 +225,10 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameter>--name /dumper/icub/right_foot/measures:o --type bottle</parameter>
+        <parameters>--name /dumper/icub/right_foot/measures:o --type bottle</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_foot-measures:o</tag>
-    <module>    
+    </module>    
     <connection>
         <from>/icub/right_foot/measures:o</from>
         <to>/dumper/icub/right_foot/measures:o</to>
