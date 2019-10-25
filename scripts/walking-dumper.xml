@@ -90,7 +90,7 @@
     <connection>
         <from>/icub/camcalib/left/out</from>
         <to>/dumper/icub/head/camcalib/left</to>
-        <protocol>mjpeg</protocol>        
+        <protocol>fast_tcp</protocol>        
     </connection>
     
     <module>
@@ -102,7 +102,7 @@
     <connection>
         <from>/icub/camcalib/right/out</from>
         <to>/dumper/icub/head/camcalib/right</to>
-        <protocol>mjpeg</protocol>        
+        <protocol>fast_tcp</protocol>        
     </connection>
     
     <module>
