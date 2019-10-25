@@ -16,9 +16,14 @@
         <port>/icub/camcalib/left/out</port>
         <port>/icub/camcalib/right/out</port>
         <port>/icub/head/state:o</port>
+        <port>/depthCamera/rgbImage:o</port>
+        <port>/depthCamera/depthImage:o</port>                
+        
         
         <!-- BASE IMU -->
         <port>/icub/xsens_inertial</port>
+   		<port>/icub/left_leg/inertials/measures:o</port>
+		<port>/icub/right_leg/inertials/measures:o</port>
         
         <!-- CONTACT WRENCHES -->
         <port>/wholeBodyDynamics/left_arm/cartesianEndEffectorWrench:o</port>
@@ -37,6 +42,31 @@
 		<port>/icub/left_foot/measures:o</port>
 		<port>/icub/right_foot/measures:o</port>
     </dependencies>
+    
+    <!-- realsense -->
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/depthCamera/rgbImage:o --type image</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-depthCamera-rgbImage</tag>
+    </module>
+    <connection>
+        <from>/depthCamera/rgbImage:o</from>
+        <to>/dumper/depthCamera/rgbImage:o</to>
+        <protocol>fast_tcp</protocol>        
+    </connection>
+
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/depthCamera/depthImage:o --type image</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-depthCamera-depthImage</tag>
+    </module>
+    <connection>
+        <from>/depthCamera/depthImage:o</from>
+        <to>/dumper/depthCamera/depthImage:o</to>
+        <protocol>fast_tcp+recv.portmonitor+type.dll+file.depthimage</protocol>        
+    </connection>        
     
     <!-- VIO -->
     <module>
@@ -232,6 +262,30 @@
     <connection>
         <from>/icub/right_foot/measures:o</from>
         <to>/dumper/icub/right_foot/measures:o</to>
+        <protocol>udp</protocol>        
+    </connection>
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icub/left_leg/inertials/measures:o --type bottle</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icub-left_leg-inertials-measures:o</tag>
+    </module>    
+    <connection>
+        <from>/icub/left_leg/inertials/measures:o</from>
+        <to>/dumper/icub/left_leg/inertials/measures:o</to>
+        <protocol>udp</protocol>        
+    </connection>
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icub/right_leg/inertials/measures:o --type bottle</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icub-right_leg-inertials-measures:o</tag>
+    </module>    
+    <connection>
+        <from>/icub/right_leg/inertials/measures:o</from>
+        <to>/dumper/icub/right_leg/inertials/measures:o</to>
         <protocol>udp</protocol>        
     </connection>
 
