@@ -1,7 +1,6 @@
 # icub-base-estimation-datasets
 Repository to collect, store and parse data sets collected on iCub through YARP interface for State Estimation experiments.
 
-__NOTE: The author promises to document this repository in a better way, in the near future! Until then, hang on with the development phase.__
 
 ## Overview
 
