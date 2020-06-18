@@ -46,7 +46,7 @@
     <!-- realsense -->
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/depthCamera/rgbImage:o --type image</parameters>
+        <parameters>--name /dumper/depthCamera/rgbImage:o --type image  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-depthCamera-rgbImage</tag>
     </module>
@@ -58,7 +58,7 @@
 
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/depthCamera/depthImage:o --type image</parameters>
+        <parameters>--name /dumper/depthCamera/depthImage:o --type image  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-depthCamera-depthImage</tag>
     </module>
@@ -71,7 +71,7 @@
     <!-- VIO -->
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/head/inertial --type bottle</parameters>
+        <parameters>--name /dumper/icub/head/inertial --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-head-inertial</tag>
     </module>
@@ -83,7 +83,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/head/camcalib/left --type image</parameters>
+        <parameters>--name /dumper/icub/head/camcalib/left --type image  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-head-camcalib-left</tag>
     </module>
@@ -95,7 +95,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/head/camcalib/right --type image</parameters>
+        <parameters>--name /dumper/icub/head/camcalib/right --type image  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-head-camcalib-right</tag>
     </module>
@@ -107,7 +107,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/head/state:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/head/state:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-head-state:o</tag>
     </module>
@@ -120,7 +120,7 @@
     <!-- BASE IMU -->    
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/waist/inertial --type bottle</parameters>
+        <parameters>--name /dumper/icub/waist/inertial --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-waist-inertial</tag>
     </module>    
@@ -133,7 +133,7 @@
     <!-- CONTACT WRENCHES -->
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/left_foot/cartesianEndEffectorWrench:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/left_foot/cartesianEndEffectorWrench:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_foot-cartesianEndEffectorWrench:o</tag>
     </module>    
@@ -145,7 +145,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/right_foot/cartesianEndEffectorWrench:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/right_foot/cartesianEndEffectorWrench:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_foot-cartesianEndEffectorWrench:o</tag>
     </module>    
@@ -157,7 +157,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/left_arm/cartesianEndEffectorWrench:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/left_arm/cartesianEndEffectorWrench:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_arm-cartesianEndEffectorWrench:o</tag>
     </module>    
@@ -169,7 +169,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/right_arm/cartesianEndEffectorWrench:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/right_arm/cartesianEndEffectorWrench:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_arm-cartesianEndEffectorWrench:o</tag>
     </module>    
@@ -182,7 +182,7 @@
     <!-- JOINT STATES -->
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/all_joints/stateExt:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/all_joints/stateExt:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-all_joints-stateExt:o</tag>
     </module>    
@@ -195,7 +195,7 @@
     <!-- 6 AXIS FT SENSORS -->
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/left_arm/analog:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/left_arm/analog:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_arm-analog:o</tag>
     </module>    
@@ -207,7 +207,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/right_arm/analog:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/right_arm/analog:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_arm-analog:o</tag>
     </module>    
@@ -219,7 +219,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/left_leg/measures:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/left_leg/measures:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_leg-measures:o</tag>
     </module>    
@@ -231,7 +231,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/right_leg/measures:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/right_leg/measures:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_leg-measures:o</tag>
     </module>    
@@ -243,7 +243,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/left_foot/measures:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/left_foot/measures:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_foot-measures:o</tag>
     </module>    
@@ -255,7 +255,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/right_foot/measures:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/right_foot/measures:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_foot-measures:o</tag>
     </module>    
@@ -267,7 +267,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/left_leg/inertials/measures:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/left_leg/inertials/measures:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-left_leg-inertials-measures:o</tag>
     </module>    
@@ -279,7 +279,7 @@
     
     <module>
         <name>yarpdatadumper</name>
-        <parameters>--name /dumper/icub/right_leg/inertials/measures:o --type bottle</parameters>
+        <parameters>--name /dumper/icub/right_leg/inertials/measures:o --type bottle  --txTime --rxTime</parameters>
         <node>localhost</node>
         <tag>walking-data-dumper-icub-right_leg-inertials-measures:o</tag>
     </module>    
