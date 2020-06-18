@@ -1,0 +1,123 @@
+<!-- Copyright (C) 2019 Fondazione Istituto Italiano di Tecnologia (IIT) -->
+<!-- All Rights Reserved. -->
+
+<application>
+    
+    <name>Walking data dumper module</name>
+    <description>collects data from the sensor suite for offline processing</description>
+    <authors>
+        <author email="prashanth.ramadoss@iit.it">Prashanth Ramadoss</author>
+        <author email="silvio.traversaro@iit.it">Silvio Traversaro</author>
+    </authors>
+
+    <dependencies>                         
+        <!-- BASE IMU -->
+        <port>/icubSim/xsens_inertial</port>
+        
+        <!-- CONTACT WRENCHES -->
+        <port>/wholeBodyDynamics/left_foot/cartesianEndEffectorWrench:o</port>
+        <port>/wholeBodyDynamics/right_foot/cartesianEndEffectorWrench:o</port>
+        
+        <!-- JOINT STATES -->
+        <port>/icubSim/all_joints/state:o</port>
+        
+        <!-- Link states  -->        
+        <port>/icubSim/floating_base/state:o</port>
+        <port>/icubSim/l_foot/state:o</port>
+        <port>/icubSim/r_foot/state:o</port>
+    </dependencies>
+    
+    
+    <!-- Link states  -->   
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icubSim/floating_base/state:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icubSim-floating_base-state:o</tag>
+    </module>
+    <connection>
+        <from>/icubSim/floating_base/state:o</from>
+        <to>/dumper/icubSim/floating_base/state:o</to>
+        <protocol>udp</protocol>        
+    </connection>
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icubSim/l_foot/state:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icubSim-l_foot-state:o</tag>
+    </module>
+    <connection>
+        <from>/icubSim/l_foot/state:o</from>
+        <to>/dumper/icubSim/l_foot/state:o</to>
+        <protocol>udp</protocol>        
+    </connection> 
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icubSim/r_foot/state:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icubSim-r_foot-state:o</tag>
+    </module>
+    <connection>
+        <from>/icubSim/r_foot/state:o</from>
+        <to>/dumper/icubSim/r_foot/state:o</to>
+        <protocol>udp</protocol>        
+    </connection>  
+     
+    
+           
+    <!-- BASE IMU -->    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icubSim/waist/inertial --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icubSim-waist-inertial</tag>
+    </module>    
+    <connection>
+        <from>/icubSim/xsens_inertial</from>
+        <to>/dumper/icubSim/waist/inertial</to>
+        <protocol>udp</protocol>        
+    </connection>
+    
+    <!-- CONTACT WRENCHES -->
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icubSim/left_foot/cartesianEndEffectorWrench:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icubSim-left_foot-cartesianEndEffectorWrench:o</tag>
+    </module>    
+    <connection>
+        <from>/wholeBodyDynamics/left_foot/cartesianEndEffectorWrench:o</from>
+        <to>/dumper/icubSim/left_foot/cartesianEndEffectorWrench:o</to>
+        <protocol>udp</protocol>        
+    </connection>
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icubSim/right_foot/cartesianEndEffectorWrench:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icubSim-right_foot-cartesianEndEffectorWrench:o</tag>
+    </module>    
+    <connection>
+        <from>/wholeBodyDynamics/right_foot/cartesianEndEffectorWrench:o</from>
+        <to>/dumper/icubSim/right_foot/cartesianEndEffectorWrench:o</to>
+        <protocol>udp</protocol>        
+    </connection>
+    
+   
+    <!-- JOINT STATES -->
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/icubSim/all_joints/state:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-icubSim-all_joints-state:o</tag>
+    </module>    
+    <connection>
+        <from>/icubSim/all_joints/state:o</from>
+        <to>/dumper/icubSim/all_joints/state:o</to>
+        <protocol>udp</protocol>        
+    </connection>
+    
+
+</application>
