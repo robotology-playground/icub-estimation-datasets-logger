@@ -188,7 +188,7 @@ classdef YarpViconParser
                                          'y', '', ...
                                          'z', ''), N, 1 );
             
-            C ={'(?<parent>', viconRoot, ')\ \"(?<child>.*)\"\ (?<txTimeStamp>\d+\.\d+)\ (?<qw>-?\d+\.\d+)\ (?<qx>-?\d+\.\d+)\ (?<qy>-?\d+\.\d+)\ (?<qz>-?\d+\.\d+)\ (?<x>-?\d+\.\d+)\ (?<y>-?\d+\.\d+)\ (?<z>-?\d+\.\d+)'};
+            C ={'(?<parent>', viconRoot, ')\ \"(?<child>.*)\"\ (?<txTimeStamp>\d+\.\d+)\ (?<x>-?\d+\.\d+)\ (?<y>-?\d+\.\d+)\ (?<z>-?\d+\.\d+)\ (?<qw>-?\d+\.\d+)\ (?<qx>-?\d+\.\d+)\ (?<qy>-?\d+\.\d+)\ (?<qz>-?\d+\.\d+)'};
             expression = strjoin(C, '');
             for idx = 1:N            
                 tfStruct = regexp(tokens{idx}, expression, 'names');
