@@ -1,0 +1,29 @@
+<!-- Copyright (C) 2019-2020 Fondazione Istituto Italiano di Tecnologia (IIT) -->
+<!-- All Rights Reserved. -->
+
+<application>
+    
+    <name>Transform server dumper module</name>
+    <description>collects data from the transform server</description>
+    <authors>
+        <author email="prashanth.ramadoss@iit.it">Prashanth Ramadoss</author>
+        <author email="silvio.traversaro@iit.it">Silvio Traversaro</author>
+    </authors>
+
+    <dependencies>
+        <port>/transformServer/transforms:o</port>
+    </dependencies>
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/transformServer/transforms:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-transformServer-transforms:o</tag>
+    </module>
+    <connection>
+        <from>/transformServer/transforms:o</from>
+        <to>/dumper/transformServer/transforms:o</to>
+        <protocol>udp</protocol>
+    </connection>
+    
+</application>

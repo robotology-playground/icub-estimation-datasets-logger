@@ -1,0 +1,56 @@
+<!-- Copyright (C) 2019-2020 Fondazione Istituto Italiano di Tecnologia (IIT) -->
+<!-- All Rights Reserved. -->
+
+<application>
+    
+    <name>Realsense dumper module</name>
+    <description>collects data from the Vicon and depth camera</description>
+    <authors>
+        <author email="prashanth.ramadoss@iit.it">Prashanth Ramadoss</author>
+        <author email="silvio.traversaro@iit.it">Silvio Traversaro</author>
+    </authors>
+
+    <dependencies>
+        <!-- VIO -->
+        <port>/depthCamera/rgbImage:o</port>
+        <port>/depthCamera/depthImage:o</port>
+        <port>/depthCamera/inertials/measures:o</port>
+    </dependencies>
+    
+    <!-- realsense -->
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/depthCamera/rgbImage:o --type image</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-depthCamera-rgbImage</tag>
+    </module>
+    <connection>
+        <from>/depthCamera/rgbImage:o</from>
+        <to>/dumper/depthCamera/rgbImage:o</to>
+        <protocol>fast_tcp</protocol>
+    </connection>
+
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/depthCamera/depthImage:o --type image</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-depthCamera-depthImage</tag>
+    </module>
+    <connection>
+        <from>/depthCamera/depthImage:o</from>
+        <to>/dumper/depthCamera/depthImage:o</to>
+        <protocol>fast_tcp+recv.portmonitor+type.dll+file.depthimage</protocol>  
+    </connection>
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/depthCamera/inertials/measures:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>walking-data-dumper-depthCamera-inertials-measures:o</tag>
+    </module>
+    <connection>
+        <from>/depthCamera/inertials/measures:o</from>
+        <to>/dumper/depthCamera/inertials/measures:o</to>
+        <protocol>udp</protocol>
+    </connection>          
+</application>
