@@ -1,0 +1,55 @@
+<!-- Copyright (C) 2020 Fondazione Istituto Italiano di Tecnologia (IIT) -->
+<!-- All Rights Reserved. -->
+
+<application>
+    
+    <name>Base estimator device data dumper module</name>
+    <description>collects output data from the base estimator device</description>
+    <authors>
+        <author email="prashanth.ramadoss@iit.it">Prashanth Ramadoss</author>
+    </authors>
+
+    <dependencies>
+        <port>/base-estimator/floating_base/state:o</port>
+        <port>/base-estimator/internal_state/stateAndStdDev:o</port>              
+        <port>/base-estimator/internal_state/stddev:o</port>        
+        <port>/base-estimator/contacts/stateAndNormalForce:o</port>
+    </dependencies>
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/base-estimator/floating_base/state:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>fbe-data-dumper-base-state</tag>
+    </module>
+    <connection>
+        <from>/base-estimator/floating_base/state:o</from>
+        <to>/dumper/base-estimator/floating_base/state:o</to>
+        <protocol>udp</protocol>        
+    </connection>
+
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/base-estimator/internal_state/stateAndStdDev:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>fbe-data-dumper-internal-stateAndStdDev</tag>
+    </module>
+    <connection>
+        <from>/base-estimator/internal_state/stateAndStdDev:o</from>
+        <to>/dumper/base-estimator/internal_state/stateAndStdDev:o</to>
+        <protocol>udp</protocol>        
+    </connection>  
+    
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name /dumper/base-estimator/contacts/stateAndNormalForce:o --type bottle  --txTime --rxTime</parameters>
+        <node>localhost</node>
+        <tag>fbe-data-dumper-internal-contacts</tag>
+    </module>
+    <connection>
+        <from>/base-estimator/contacts/stateAndNormalForce:o</from>
+        <to>/dumper/base-estimator/contacts/stateAndNormalForce:o</to>
+        <protocol>udp</protocol>        
+    </connection>       
+    
+</application>
