@@ -60,7 +60,7 @@ classdef YarpViconParser
                 end
                 tfCollection = YarpViconParser.parseTFCollectionForViconTF(viconData, obj.viconRoot);
                 obj = obj.updateViconDataMap(tfCollection, time(end));
-                nLines = nLines + 1;                
+                nLines = nLines + 1;               
             end        
             obj.populateMetaData();
             fclose(fid);
@@ -105,6 +105,12 @@ classdef YarpViconParser
             markerData = obj.dataMap(query);
         end
         
+        function markerNames = getAllMarkerNames(obj, subject_name)
+            assert(isKey(obj.subjects, subject_name), 'Specified subject unavailable');
+            subj = obj.subjects(subject_name);
+            markerNames = subj.markers;
+        end
+        
     end
     
     methods (Access = private)
@@ -113,6 +119,12 @@ classdef YarpViconParser
                 tf = tfCollection(tfIdx);
                 xyz = [str2double(tf.x) str2double(tf.y) str2double(tf.z)];
                 quat = [str2double(tf.qw) str2double(tf.qx) str2double(tf.qy) str2double(tf.qz)];
+                
+                % avoid this corner case scenario, means the marker was
+                % occluded in the vicon volume and was not visible
+                if (xyz(1) == 0.0 && xyz(2) == 0.0 && xyz(3) == 0.0)
+                    continue
+                end
                 
                 updated = struct('bodyID', '', ...
                                   'rxTime', [], ...
@@ -143,8 +155,7 @@ classdef YarpViconParser
                     continue
                 end
                 expr='Subj_(?<subject>.*\ ?.*)::(?<seg_or_marker>Marker|Seg)_(?<Name>.*)';
-                meta = regexp(keystr, expr, 'names');
-                meta
+                meta = regexp(keystr, expr, 'names');                
                 subj = struct('subject_name', '', ...
                               'markers', cell(1), ...
                               'segments', cell(1));
@@ -188,9 +199,9 @@ classdef YarpViconParser
                                          'y', '', ...
                                          'z', ''), N, 1 );
             
-            C ={'(?<parent>', viconRoot, ')\ \"(?<child>.*)\"\ (?<txTimeStamp>\d+\.\d+)\ (?<x>-?\d+\.\d+)\ (?<y>-?\d+\.\d+)\ (?<z>-?\d+\.\d+)\ (?<qw>-?\d+\.\d+)\ (?<qx>-?\d+\.\d+)\ (?<qy>-?\d+\.\d+)\ (?<qz>-?\d+\.\d+)'};
+            C ={'(?<parent>', viconRoot, ')\ \"(?<child>.*)\"\ (?<txTimeStamp>\d+\.\d+)\ (?<x>[+-]?\d+\.?\d*([eE][+-]?\d+)?)\ (?<y>[+-]?\d+\.?\d*([eE][+-]?\d+)?)\ (?<z>[+-]?\d+\.?\d*([eE][+-]?\d+)?)\ (?<qw>[+-]?\d+\.?\d*([eE][+-]?\d+)?)\ (?<qx>[+-]?\d+\.?\d*([eE][+-]?\d+)?)\ (?<qy>[+-]?\d+\.?\d*([eE][+-]?\d+)?)\ (?<qz>[+-]?\d+\.?\d*([eE][+-]?\d+)?)'};
             expression = strjoin(C, '');
-            for idx = 1:N            
+            for idx = 1:N                  
                 tfStruct = regexp(tokens{idx}, expression, 'names');
                 assert(~any(structfun(@isempty, tfStruct)), 'Could not parse the Vicon log, maybe the ViconRoot variable is wrong');
                 tfCollection(idx) = tfStruct;
