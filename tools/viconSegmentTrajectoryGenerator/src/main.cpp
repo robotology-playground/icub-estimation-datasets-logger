@@ -57,6 +57,36 @@ void temporalAdjustment(const std::string& measure_type, const double& current_e
     }
 }
 
+void decomposeHomogeneousTransform(Eigen::Ref<const Eigen::Matrix4f> T,
+                                   Eigen::Ref<Eigen::Vector3f> xyz,
+                                   Eigen::Ref<Eigen::Vector3f> rpy)
+{
+    Eigen::Quaternionf quat;
+    quat = T.block<3, 3>(0, 0);
+
+    rpy = quat.toRotationMatrix().eulerAngles(2, 1, 0).reverse();
+    xyz = T.block<3, 1>(0, 3);
+}
+
+void setupLoggerVars(BenchmarkUtils::MatHandler& ml, const std::string& prefix = "")
+{
+    ml.m_logger->create(prefix+"time", 1);
+    ml.m_logger->create(prefix+"xyz", 3);
+    ml.m_logger->create(prefix+"rpy", 3);
+}
+
+void updateLoggerVars(BenchmarkUtils::MatHandler& ml,
+                      const double& time,
+                      Eigen::Ref<const Eigen::Matrix4f> T,
+                      const std::string& prefix = "")
+{
+    ml.m_logger->add(prefix+"time", time);
+    Eigen::Vector3f xyz, rpy;
+    decomposeHomogeneousTransform(T, xyz, rpy);
+    ml.m_logger->add(prefix+"xyz", xyz);
+    ml.m_logger->add(prefix+"rpy", rpy);
+}
+
 }
 
 int main(int argc, char** argv)
@@ -82,6 +112,10 @@ int main(int argc, char** argv)
     {
         return -1;
     }
+
+    ml.setLoggerPrefix("vicon");
+    ml.openMatLogger();
+    BenchmarkUtils::setupLoggerVars(ml);
 
     std::cout << "Nr markers read from mat file: " << segTraj.nrMarkers <<  std::endl;
     std::cout << "Minimum trajectory start time: " << segTraj.minStartTime <<  " ns." << std::endl;
@@ -145,9 +179,9 @@ int main(int argc, char** argv)
         Eigen::Matrix4f Base_H_ViconWorld = Eigen::Matrix4f::Identity();
         bool verbose{true};
         BenchmarkUtils::runICP(refCloud, srcCloud, fitnessScore, Base_H_ViconWorld, verbose);
-
         auto endComp = std::chrono::high_resolution_clock::now();
         double compTime = std::chrono::duration_cast<std::chrono::microseconds>( endComp - startComp ).count();
+        BenchmarkUtils::updateLoggerVars(ml, currentTime, Base_H_ViconWorld);
 
         currentTime += dt;
         totalIter++;
@@ -162,13 +196,13 @@ int main(int argc, char** argv)
                 canUseMarkerPosition[idx] = false;
             }
         }
-
     }
 
     while(!viewer.wasStopped())
     {
     }
 
+    ml.closeMatio();
     std::cout << "Total Iterations: " << totalIter << std::endl;
     std::cout << "Iterations without pointcloud: " << failIter << std::endl;
 
