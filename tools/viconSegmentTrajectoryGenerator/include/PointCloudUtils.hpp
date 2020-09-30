@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Istituto Italiano di Tecnologia (IIT)
+ * Copyright (C) 2020 Istituto Italiano di Tecnologia (IIT)
  * All rights reserved.
  *
  * This software may be modified and distributed under the terms of the
@@ -14,7 +14,7 @@
 #include <pcl/registration/icp.h>
 #include <Eigen/Dense>
 
-namespace PointCloudUtils
+namespace BenchmarkUtils
 {
 
 using PCLXYZ = pcl::PointCloud<pcl::PointXYZ>;
@@ -89,6 +89,6 @@ bool runICP(const PCLXYZPtr& srcCloud,
 }
 
 
-} // end namespace PointCloudUtils
+} // end namespace BenchmarkUtils
 
 #endif //BM_PCL_UTILS_H
