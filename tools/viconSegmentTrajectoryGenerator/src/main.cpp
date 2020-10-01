@@ -23,41 +23,6 @@ using namespace std::chrono_literals;
 
 namespace BenchmarkUtils
 {
-void temporalAdjustment(const std::string& measure_type, const double& current_est_time,
-                        const std::vector<double>& measure_time, const size_t& max_measure_iter,
-                        bool& can_set_measure, size_t& current_measure_iter, const double& tol)
-{
-    // temporal calibration of measurements to achieve a clean sensor fusion
-    // for setting corresponding measurements to the estimator
-    if (current_measure_iter < max_measure_iter)
-    {
-        if ( std::abs(current_est_time - measure_time[current_measure_iter]) < tol )
-        {
-            can_set_measure = true;
-        }
-        else
-        {
-            // skip through measurements to catch up with the estimator time
-            if (measure_time[current_measure_iter] < current_est_time)
-            {
-                size_t temp_iter;
-                for (temp_iter = current_measure_iter; measure_time[temp_iter] < current_est_time ;temp_iter++) {
-                    if (temp_iter >= max_measure_iter)
-                    {
-                        temp_iter = max_measure_iter;
-                        break;
-                    }
-                }
-                current_measure_iter = temp_iter;
-                if ( std::abs(current_est_time - measure_time[current_measure_iter]) < tol )
-                {
-                    can_set_measure = true;
-                }
-            }
-        }
-    }
-}
-
 void decomposeHomogeneousTransform(Eigen::Ref<const Eigen::Matrix4f> T,
                                    Eigen::Ref<Eigen::Vector3f> xyz,
                                    Eigen::Ref<Eigen::Vector3f> rpy)
@@ -127,8 +92,10 @@ int main(int argc, char** argv)
     double startTime{segTraj.minStartTime};
     double endTime{segTraj.maxEndTime};
     double currentTime{startTime};
-    double dt{0.02};
-    double tol_for_fusiontemporal{0.02};
+    std::vector<double> timeVector;
+    segTraj.getMergedTimeVector(timeVector);
+//     double dt{0.02};
+    double tol_for_fusiontemporal{1e-4};
 
     size_t totalIter{0};
     size_t failIter{0};
@@ -142,24 +109,20 @@ int main(int argc, char** argv)
     }
 
 
-    pcl::visualization::CloudViewer viewer("Cloud Viewer");
+    pcl::visualization::PCLVisualizer viewer("Cloud Viewer");
+    viewer.setBackgroundColor(0, 0, 0);
+
+//     viewer.addCoordinateSystem(1.0);
     Eigen::Matrix4f Base_H_ViconWorld = Eigen::Matrix4f::Identity();
     Eigen::Matrix4f initialGuessB_H_Vicon = Eigen::Matrix4f::Identity();
 
-    while (currentTime < endTime)
+//     while (currentTime < endTime)
+    while (totalIter < timeVector.size())
+//     while (totalIter < 2)
     {
-        // flags to check if current iteration time and measurement time at the measurement iteration index
-        // are close to each other in order to set the measurement and increment the measurement iteration index
+        currentTime = timeVector[totalIter];
 
-
-        // temporal adjustment of measurements to wait for or catch up with estimator runtime
-        for (size_t idx = 1; idx <= nrMarkers; idx++)
-        {
-            std::string markerName{"marker"+ std::to_string(idx)};
-            auto& markerIter = currentMarkerIter[idx];
-            auto& useMarker = canUseMarkerPosition[idx];
-            BenchmarkUtils::temporalAdjustment(markerName, currentTime, segTraj.markerTime[idx], segTraj.markerMaxIter[idx], useMarker, markerIter, tol_for_fusiontemporal);
-        }
+        segTraj.getCurrentTimeMarkerData(currentTime, tol_for_fusiontemporal, canUseMarkerPosition, currentMarkerIter);
 
         // build point cloud
         auto srcCloud = boost::make_shared<BenchmarkUtils::PCLXYZ>();
@@ -167,8 +130,6 @@ int main(int argc, char** argv)
         segTraj.buildPointCloudFromCurrentMarkerData(canUseMarkerPosition, currentMarkerIter, srcCloud);
         if (srcCloud->width < 3)
         {
-//             std::cerr << "PCL at time: " << currentTime << " has only "<< srcCloud->width << " points. Skipping forward by one step ... " << std::endl;
-            currentTime += dt;
             totalIter++;
             failIter++;
             continue;
@@ -196,11 +157,40 @@ int main(int argc, char** argv)
         }
         outFile.close();
 
-//         viewer.showCloud(srcCloud);
-        viewer.showCloud(finalCloud);
-        std::this_thread::sleep_for(0.02s);
+        if (totalIter > 0)
+        {
+            viewer.removePointCloud("srcCloud");
+            viewer.removePointCloud("refCloud");
+            viewer.removePointCloud("aligned");
+            viewer.removeText3D("srcCloudTxt");
+            viewer.removeText3D("refCloudTxt");
+            viewer.removeText3D("alignedTxt");
+        }
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> green_color(srcCloud, 0, 255, 0);
+        viewer.addPointCloud<pcl::PointXYZ>(srcCloud, green_color, "srcCloud");
+        viewer.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 16, "srcCloud");
 
-        currentTime += dt;
+
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> red_color(refCloud, 255, 0, 0);
+        viewer.addPointCloud<pcl::PointXYZ>(refCloud, red_color, "refCloud");
+        viewer.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 16, "refCloud");
+
+
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> blue_color(finalCloud, 0, 0, 255);
+        viewer.addPointCloud<pcl::PointXYZ>(finalCloud, blue_color, "aligned");
+        viewer.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 16, "aligned");
+        double txtScale{0.01};
+        viewer.addText3D("Src Cloud", srcCloud->points[0], txtScale, 0, 255, 0, "srcCloudTxt");
+        viewer.addText3D("Ref Cloud", refCloud->points[0], txtScale, 255, 0, 0, "refCloudTxt");
+        viewer.addText3D("Aligned Cloud", finalCloud->points[0], txtScale, 0, 0, 255, "alignedTxt");
+        viewer.spinOnce(100);
+        std::this_thread::sleep_for(0.02s);
+//         do
+//  {
+//    cout << '\n' << "Press a key to continue...";
+//  } while (cin.get() != '\n');
+
+//         currentTime += dt;
         totalIter++;
         for (size_t idx = 1; idx <= nrMarkers; idx++)
         {
@@ -215,9 +205,6 @@ int main(int argc, char** argv)
         }
     }
 
-    while(!viewer.wasStopped())
-    {
-    }
 
     ml.closeMatio();
     std::cout << "Total Iterations: " << totalIter << std::endl;

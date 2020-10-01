@@ -103,6 +103,60 @@ namespace BenchmarkUtils
             cloud->is_dense = false;
         }
 
+        void getMergedTimeVector(std::vector<double>& time)
+        {
+            time.clear();
+            for (const auto& data : markerTime)
+            {
+                std::vector<double> temp;
+                const auto& timeVec = data.second;
+                std::merge(timeVec.begin(), timeVec.end(),
+                           time.begin(), time.end(),
+                           std::back_inserter(temp));
+                time.clear();
+                time = temp;
+            }
+
+            time.erase(std::unique(time.begin(), time.end()), time.end());
+        }
+
+        void getCurrentTimeMarkerData(const double& currentTime,
+                                      const double& timeTolerance,
+                                      std::unordered_map<size_t, bool>& canUseMarkerPosition,
+                                      std::unordered_map<size_t, size_t>& currentMarkerIter)
+        {
+            for (const auto& data : markerTime)
+            {
+                const auto& timeVec = data.second;
+                auto const it = std::find(timeVec.begin(), timeVec.end(), currentTime);
+                if (it == timeVec.end())
+                {
+                    canUseMarkerPosition[data.first] = false;
+                    continue;
+                }
+
+                auto index = std::distance(timeVec.begin(), it);
+
+
+                    std::cout << "========\n" << std::setprecision(15) << "Current Time: " << currentTime << " \nMarker idx: " << data.first
+                              << " \nTime idx: " << index
+                              << " \nTime at index: " << timeVec[index]
+                              << " \n Diff: " <<  std::abs(currentTime - timeVec[index])
+                              << std::endl;
+
+
+
+                // check for current index
+                if (std::abs(currentTime - timeVec[index]) < timeTolerance)
+                {
+                    canUseMarkerPosition[data.first] = true;
+                    currentMarkerIter[data.first] = index;
+                    continue;
+                }
+                canUseMarkerPosition[data.first] = false;
+            }
+        }
+
     };
 
 }
