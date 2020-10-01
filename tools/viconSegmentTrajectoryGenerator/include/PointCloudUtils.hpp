@@ -12,6 +12,7 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/registration/icp.h>
+#include <pcl/registration/transformation_estimation_svd.h>
 #include <Eigen/Dense>
 
 namespace BenchmarkUtils
@@ -51,22 +52,28 @@ bool readPCDFile(const std::string& pcdFilePath,
 bool runICP(const PCLXYZPtr& srcCloud,
             const PCLXYZPtr& targetCloud,
             double& fitnessScore,
+            Eigen::Ref<Eigen::Matrix4f> initial_guess,
             Eigen::Ref<Eigen::Matrix4f> T,
             bool verbose = false,
             PCLXYZPtr finalCloud = nullptr)
 {
     pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
+    pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ>::Ptr trans_svd = boost::make_shared< pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ> >();
+    icp.setTransformationEstimation(trans_svd);
+
+    icp.setTransformationEpsilon(1e-6);
+    icp.setMaximumIterations(1e6);
     icp.setInputSource(srcCloud);
     icp.setInputTarget(targetCloud);
 
     if (finalCloud == nullptr)
     {
         PCLXYZ final;
-        icp.align(final);
+        icp.align(final, initial_guess);
     }
     else
     {
-        icp.align(*finalCloud);
+        icp.align(*finalCloud, initial_guess);
     }
 
     fitnessScore = icp.getFitnessScore();
@@ -77,7 +84,6 @@ bool runICP(const PCLXYZPtr& srcCloud,
     if (verbose)
     {
         std::cout << "===+=== " << std::endl;
-        std::cout << "Final transformation between point clouds: " << std::endl;
         std::cout << "ICP has converged: " << converged << " score: "
                   << fitnessScore << std::endl;
         std::cout << "Final transformation between point clouds: " << std::endl;

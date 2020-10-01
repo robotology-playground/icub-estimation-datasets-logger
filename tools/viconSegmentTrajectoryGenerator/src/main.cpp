@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
+#include <fstream>
 
 #include "MatHandler.hpp"
 #include "PointCloudUtils.hpp"
@@ -142,6 +143,8 @@ int main(int argc, char** argv)
 
 
     pcl::visualization::CloudViewer viewer("Cloud Viewer");
+    Eigen::Matrix4f Base_H_ViconWorld = Eigen::Matrix4f::Identity();
+    Eigen::Matrix4f initialGuessB_H_Vicon = Eigen::Matrix4f::Identity();
 
     while (currentTime < endTime)
     {
@@ -160,6 +163,7 @@ int main(int argc, char** argv)
 
         // build point cloud
         auto srcCloud = boost::make_shared<BenchmarkUtils::PCLXYZ>();
+
         segTraj.buildPointCloudFromCurrentMarkerData(canUseMarkerPosition, currentMarkerIter, srcCloud);
         if (srcCloud->width < 3)
         {
@@ -170,18 +174,31 @@ int main(int argc, char** argv)
             continue;
         }
 
-        viewer.showCloud(srcCloud);
-        std::this_thread::sleep_for(0.02s);
-
         // run icp here
         auto startComp = std::chrono::high_resolution_clock::now();
         double fitnessScore{0.0};
-        Eigen::Matrix4f Base_H_ViconWorld = Eigen::Matrix4f::Identity();
+
         bool verbose{true};
-        BenchmarkUtils::runICP(refCloud, srcCloud, fitnessScore, Base_H_ViconWorld, verbose);
+        auto finalCloud = boost::make_shared<BenchmarkUtils::PCLXYZ>();
+        BenchmarkUtils::runICP(srcCloud, refCloud, fitnessScore, initialGuessB_H_Vicon, Base_H_ViconWorld, verbose, finalCloud);
+        initialGuessB_H_Vicon = Base_H_ViconWorld;
         auto endComp = std::chrono::high_resolution_clock::now();
         double compTime = std::chrono::duration_cast<std::chrono::microseconds>( endComp - startComp ).count();
         BenchmarkUtils::updateLoggerVars(ml, currentTime, Base_H_ViconWorld);
+
+        std::ofstream outFile;
+        std::string fileName{"srcCloud/"+std::to_string(totalIter)+".xyz"};
+        outFile.open(fileName);
+
+        for (const auto& pt : srcCloud->points)
+        {
+            outFile << pt.x << ", " << pt.y << ", " << pt.z << "\n";
+        }
+        outFile.close();
+
+//         viewer.showCloud(srcCloud);
+        viewer.showCloud(finalCloud);
+        std::this_thread::sleep_for(0.02s);
 
         currentTime += dt;
         totalIter++;
